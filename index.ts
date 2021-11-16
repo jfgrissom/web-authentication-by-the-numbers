@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from 'express'
-const basicAuth = require('express-basic-auth')
+import basicAuth from 'express-basic-auth'
 
 const app: Application = express()
 const port = 3000
