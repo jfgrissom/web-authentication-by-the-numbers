@@ -5,7 +5,7 @@ const app: Application = express()
 const port = 3000
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  let user = auth(req)
+  const user = auth(req)
 
   if (
     user === undefined ||
@@ -16,6 +16,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('WWW-Authenticate', 'Basic realm="Node"')
     res.end('Unauthorized')
   } else {
+    console.log(user)
     next()
   }
 })
