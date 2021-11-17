@@ -1,10 +1,10 @@
-import express, { Application, Request, Response } from 'express'
+import express, { Application, Request, Response, NextFunction } from 'express'
 import auth from 'basic-auth'
 
 const app: Application = express()
 const port = 3000
 
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   let user = auth(req)
 
   if (
