@@ -11,7 +11,9 @@ const sessionOptions = {
 app.use(session(sessionOptions))
 
 app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return res.send(`Session ID: ${req.session.id}`)
+  return res.status(200).send({
+    message: "Hello World! I'm not authenticated."
+  })
 })
 
 app.listen(port)

@@ -28,7 +28,9 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "basic-auth": "^2.0.1",
     "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
     "express-session": "^1.17.2"
   }
 }
