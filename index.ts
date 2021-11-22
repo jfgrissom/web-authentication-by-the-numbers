@@ -15,7 +15,7 @@ interface iUser {
 const users: iUser[] = [{ id: 1, username: 'admin', password: 'supersecret' }]
 
 passport.use(
-  new Strategy((username, password, done) => {
+  new Strategy({}, (username: string, password: string, done: Function) => {
     if (!users) return done(null, false, { message: 'Database Failure.' })
 
     const user = users.find((user) => {
@@ -43,7 +43,7 @@ passport.serializeUser((user, done) => {
   return done(null, user)
 })
 
-passport.deserializeUser((id, done) => {
+passport.deserializeUser((id: number, done: Function) => {
   const user = users.find((user) => user.id === id)
   if (!user) return done(null, false)
 
@@ -51,7 +51,9 @@ passport.deserializeUser((id, done) => {
 })
 
 app.get('/', (req: Request, res: Response) => {
-  req.user
+  if (res.user) {
+    console.log('Thar Be Users!')
+  }
   return res.send(`
     Home | <a href="/login">Login</a>
     <H1>Home</H1>
