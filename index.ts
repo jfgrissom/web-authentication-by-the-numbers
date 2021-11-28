@@ -1,7 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from 'express'
 import passport from 'passport'
 import { Strategy } from 'passport-local'
-import session from 'express-session'
+import session, { SessionOptions } from 'express-session'
 import { flash } from 'express-flash-message'
 
 const app: Application = express()
@@ -38,8 +38,13 @@ declare module 'express-session' {
 app.use(express.urlencoded())
 
 // Create a session configuration.
-const sessionConfig = {
-  secret: 'Not Really A Secret But It Should Be In Production'
+const sessionConfig: SessionOptions = {
+  secret: 'Not Really A Secret But It Should Be In Production',
+  cookie: {
+    httpOnly: true, // Only let the browser modify this, not JS.
+    secure: process.env.NODE_ENV === 'production' ? true : false, // In production only set cookies if the TLS is enabled on the connection.
+    sameSite: 'strict' // Only send a cookie if the domain matches the browser url.
+  }
 }
 
 // Enable sessions.
@@ -79,14 +84,12 @@ passport.use(
 // and serializes the user into the session.
 // It's worth noting that this only gets called after the a user has been authenticated.
 passport.serializeUser((user, done) => {
-  console.log(`Serializing User: ${JSON.stringify(user)}`)
   return done(null, user)
 })
 
 // Takes the user passed to it from the session and deserializes it so passport can use it.
 // It's worth noting this gets called on every subsequent http request.
 passport.deserializeUser((user: Express.User, done: Function) => {
-  console.log(`Deserializing User: ${JSON.stringify(user)}`)
   return done(null, user)
 })
 
@@ -115,7 +118,6 @@ app.get('/', (req: Request, res: Response) => {
     <H1>Home</H1>
     <p>This is a public route. No Authentication is needed.</p>
     SessionID: ${req.session.id} <br/>
-    ${JSON.stringify(req.session)}<br/>
     Authenticated: ${req.isAuthenticated() ? 'Yes' : 'No'} <br/>
     User: ${JSON.stringify(req.user)}
   `)
